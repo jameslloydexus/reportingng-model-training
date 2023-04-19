@@ -1,0 +1,21 @@
+---
+name: build branch
+
+on:
+  push:
+    branches-ignore:
+      - 'dev'
+      - 'master'
+    tags-ignore:
+      - '**'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      maven_repo_id: 'github'
+      push: 'false'
+      post_sonarqube: 'false'
+    secrets:
+      maven_username: ${{ secrets.MAVEN_USERNAME }}
+      maven_password: ${{ secrets.MAVEN_PASSWORD }}
