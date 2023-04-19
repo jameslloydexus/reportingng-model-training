@@ -1,0 +1,26 @@
+---
+name: build master branch
+
+on:
+  push:
+    branches:
+      - 'master'
+    tags-ignore:
+      - '**'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      maven_repo_id: 'repo-id'
+      post_sonarqube: 'true'
+      sonarqube_url: https://sonarqube-ailabs.exus.co.uk
+      push: 'true'
+      docker_registry: harbor-ailabs.exus.co.uk
+      additional_tag: 'latest'
+    secrets:
+      maven_username: ${{ secrets.NEXUS_USERNAME }}
+      maven_password: ${{ secrets.NEXUS_PASSWORD }}
+      sonarqube_token: ${{ secrets.SONARQUBE_TOKEN }}
+      docker_registry_username: ${{ secrets.HARBOR_USERNAME }}
+      docker_registry_password: ${{ secrets.HARBOR_PASSWORD }}

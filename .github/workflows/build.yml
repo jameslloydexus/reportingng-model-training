@@ -1,0 +1,69 @@
+---
+name: build
+
+on:
+  workflow_call:
+    inputs:
+      maven_repo_id:
+        description: 'Maven repository id in pom.xml'
+        required: false
+        type: string
+      post_sonarqube:
+        description: 'Post SonarScanner analysis to SonarQube'
+        required: true
+        type: string
+      sonarqube_url:
+        description: 'URL of SonarQube to post SonarScanner analysis'
+        required: false
+        type: string
+      push:
+        description: 'Push the Docker image to registry'
+        required: true
+        type: string
+      docker_registry:
+        description: 'URL of Docker registry to push image'
+        required: false
+        type: string
+      additional_tag:
+        description: 'Additional Docker image tag to create'
+        required: false
+        type: string
+        default: ""
+    secrets:
+      maven_username:
+        required: false
+      maven_password:
+        required: false
+      sonarqube_token:
+        required: false
+      docker_registry_username:
+        required: false
+      docker_registry_password:
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to Docker registry
+        if: ${{ inputs.push == 'true' }}
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ inputs.docker_registry }}
+          username: ${{ secrets.docker_registry_username }}
+          password: ${{ secrets.docker_registry_password }}
+          logout: true
+      - name: Execute build script
+        env:
+          MAVEN_SETTINGS: .github/workflows/settings.xml
+          MAVEN_USERNAME: ${{ secrets.maven_username }}
+          MAVEN_PASSWORD: ${{ secrets.maven_password }}
+          MAVEN_REPO_ID: ${{ inputs.maven_repo_id }}
+          POST_SONARQUBE: ${{ inputs.post_sonarqube }}
+          SONAR_URL: ${{ inputs.sonarqube_url }}
+          SONAR_TOKEN: ${{ secrets.sonarqube_token }}
+          PUSH: ${{ inputs.push }}
+          DOCKER_REGISTRY_URL: ${{ inputs.docker_registry }}
+          PUSH_EXTRA_TAGS: ${{ inputs.additional_tag }}
+        run: ./build.sh

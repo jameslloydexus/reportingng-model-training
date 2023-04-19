@@ -1,0 +1,36 @@
+---
+repos:
+  # Meta
+  - repo: meta
+    hooks:
+      - id: check-hooks-apply
+      - id: check-useless-excludes
+  # Generic
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      - id: check-case-conflict
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+  # Docker
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.10.0
+    hooks:
+      - id: hadolint-docker
+  # Markdown
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.32.2
+    hooks:
+      - id: markdownlint
+  # Shell
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.8.0.4
+    hooks:
+      - id: shellcheck
+  # YAML
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.28.0
+    hooks:
+      - id: yamllint
