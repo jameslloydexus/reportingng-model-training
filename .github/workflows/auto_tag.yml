@@ -1,0 +1,27 @@
+---
+name: tag
+
+on:
+  push:
+    branches:
+      - 'master'
+    tags-ignore:
+      - '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Export version
+        id: export_version
+        run: |
+          docker run --rm -v "$(pwd):/app" -w "/app" maven:3.8.5-openjdk-17 mvn -q help:evaluate -Dexpression=project.version -Doutput=TAG && \
+          VERSION=$(cat TAG) && \
+          echo "::set-output name=version::${VERSION}"
+      - name: Tag version
+        env:
+          VERSION: ${{ steps.export_version.outputs.version }}
+        run: |
+          git tag -f ${VERSION}
+          git push -f --tags
