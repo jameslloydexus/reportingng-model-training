@@ -1,0 +1,5 @@
+DF_max_pay_amount_ever
+DF_std_pay_amount_ever
+balance_limit
+total_out_standing
+total_balance

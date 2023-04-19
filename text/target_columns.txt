@@ -1,0 +1,7 @@
+DF_ptp_rate
+DF_last_action_was_ptp
+DF_positive_ptp
+DF_rpc_rate
+DF_last_action_was_rpc
+DF_positive_rpc
+DF_average_actions_required_per_case
